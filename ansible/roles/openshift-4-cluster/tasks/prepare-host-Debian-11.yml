@@ -1,0 +1,72 @@
+---
+- name: Upgrade all packages
+  apt:
+    name: '*'
+    state: latest
+    update_cache: yes
+
+- name: Installing KVM Packages
+  apt:
+    name:
+      - qemu-kvm
+      - libvirt-clients
+      - libvirt-daemon-system
+      - bridge-utils
+      - virtinst
+      - libvirt-daemon
+      - virt-manager
+      # ansible virt need lxml
+      - python3-lxml
+      - python3-pip
+      # Important for python3-openshift
+      - python3-requests-oauthlib
+      # Need's epel - is enabled by default on hetzner
+      #- python3-openshift - replaced with pip next
+    state: latest
+
+- name: Install Openshift client from PIP
+  pip:
+    name: python3-openshift
+
+- name: Enable & Start ufw
+  community.general.ufw:
+    state: enabled
+    policy: allow
+
+- name: Allow NFS traffic from VMs to Host
+  community.general.ufw:
+    rule: allow
+    name: '{{ item }}'
+    src: "192.168.50.0/24"
+  with_items:
+    - NFS
+
+- name: Allow Openshift traffic from VMs to Host
+  community.general.ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+    src: "192.168.50.0/24"
+  with_items:
+    - 80
+    - 443
+    - 6443
+    - 22623
+
+- name: Allow OpenShift traffic from public to Host
+  community.general.ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+    src: any
+  with_items:
+    - 80
+    - 443
+    - 6443
+    - 22623
+
+- name: Set UFW to default deny
+  community.general.ufw:
+    state: enabled
+    policy: deny
+

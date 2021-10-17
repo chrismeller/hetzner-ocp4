@@ -1,6 +1,6 @@
 ---
 - name: Install haproxy
-  yum:
+  apt:
     name:
       - podman
     state: present
