@@ -28,6 +28,12 @@
   pip:
     name: python3-openshift
 
+- name: Install UFW
+  apt:
+    name:
+      - ufw
+    state: latest
+
 - name: Enable & Start ufw
   community.general.ufw:
     state: enabled
