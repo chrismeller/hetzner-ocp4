@@ -5,6 +5,9 @@
       - podman
     state: present
 
+- name: Create dir
+  file: path=/etc/sysconfig state=directory
+
 - name: Install OpenShift 4 Loadbalancer SystemD service
   copy:
     content: |
