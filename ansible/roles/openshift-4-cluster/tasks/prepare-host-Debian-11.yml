@@ -22,7 +22,13 @@
       - python3-requests-oauthlib
       # Need's epel - is enabled by default on hetzner
       #- python3-openshift - replaced with pip next
-    state: latest
+    state: present
+
+- name: Install DNSMasq
+  apt:
+    name:
+      - dnsmasq
+    state: present
 
 - name: Install Openshift client from PIP
   pip:
