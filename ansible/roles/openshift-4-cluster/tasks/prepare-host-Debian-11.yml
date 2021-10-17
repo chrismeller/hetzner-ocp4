@@ -26,7 +26,7 @@
 
 - name: Install Openshift client from PIP
   pip:
-    name: python3-openshift
+    name: openshift
 
 - name: Install UFW
   apt:
